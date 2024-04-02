@@ -1,4 +1,4 @@
-CREATE TABLE USERS (
+CREATE TABLE IF NOT EXISTS USERS (
     user_id BIGINT NOT NULL auto_increment,
     role VARCHAR (100),
     name VARCHAR(255),
