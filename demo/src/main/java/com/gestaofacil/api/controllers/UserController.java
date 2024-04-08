@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 public class UserController {
     @Autowired
     public UserRepository repository;
+    @Autowired
+    public PasswordEncoder bcrypt;
     @GetMapping
     public ResponseEntity<Page<UserDTO>> getUsers(Pageable pagination){
         var users = repository.findAll(pagination).map(user -> new UserDTO(user));
@@ -33,6 +37,7 @@ public class UserController {
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user){
         try{
             User newUser = new User(user);
+            newUser.setPassword(bcrypt.encode(newUser.getPassword()));
             repository.save(newUser);
             return ResponseEntity.created(URI.create("/user" + newUser.getUser_id())).body(new UserDTO(newUser));
         }catch(RuntimeException exception) {
