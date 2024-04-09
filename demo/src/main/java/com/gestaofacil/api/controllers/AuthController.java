@@ -2,7 +2,7 @@ package com.gestaofacil.api.controllers;
 
 import com.gestaofacil.api.domain.user.LoginDTO;
 import com.gestaofacil.api.domain.user.User;
-import com.gestaofacil.api.services.TokenService;
+import com.gestaofacil.api.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -3,7 +3,9 @@ package com.gestaofacil.api.controllers;
 import com.gestaofacil.api.domain.user.User;
 import com.gestaofacil.api.domain.user.UserDTO;
 import com.gestaofacil.api.domain.user.UserRepository;
+import com.gestaofacil.api.service.UserService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,24 +24,20 @@ import java.util.stream.Collectors;
 
 public class UserController {
     @Autowired
-    public UserRepository repository;
-    @Autowired
-    public PasswordEncoder bcrypt;
+    UserService userService;
     @GetMapping
     public ResponseEntity<Page<UserDTO>> getUsers(Pageable pagination){
-        var users = repository.findAll(pagination).map(user -> new UserDTO(user));
+        var users = userService.getAllUsers(pagination);
         return ResponseEntity.ok(users);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user){
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO user){
         try{
-            User newUser = new User(user);
-            newUser.setPassword(bcrypt.encode(newUser.getPassword()));
-            repository.save(newUser);
-            return ResponseEntity.created(URI.create("/user" + newUser.getUser_id())).body(new UserDTO(newUser));
+            var newUser = userService.createUser(user);
+            return ResponseEntity.created(URI.create("/user" + newUser.user_id())).body(user);
         }catch(RuntimeException exception) {
             throw new RuntimeException("erro ao criar usuário: ", exception);
         }
@@ -47,25 +45,23 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id){
-        Optional<User> user = repository.findById(id);
-        if (user.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(new UserDTO(user.get()));
+        var user = userService.getUser(id);
+        if (user == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateUser(@PathVariable Long id, @RequestBody UserDTO user){
-        Optional<User> oldUser = repository.findById(id);
-        if(oldUser.isEmpty()) return ResponseEntity.notFound().build();
-        oldUser.get().update(user);
-        return ResponseEntity.ok(oldUser);
+        var updatedUser = userService.updateUser(id,user);
+        if(updatedUser == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
-        Optional<User> user = repository.findById(id);
-        if(user.isEmpty()) return ResponseEntity.notFound().build();
-        repository.delete(user.get());
+        var deleted = userService.deleteUser(id);
+        if(!deleted) return ResponseEntity.notFound().build();
         return ResponseEntity.ok("usuário deletado com sucesso!");
     }
 }

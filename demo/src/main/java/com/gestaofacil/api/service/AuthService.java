@@ -1,4 +1,4 @@
-package com.gestaofacil.api.services;
+package com.gestaofacil.api.service;
 
 import com.gestaofacil.api.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
