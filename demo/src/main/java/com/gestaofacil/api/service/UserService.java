@@ -1,6 +1,9 @@
 package com.gestaofacil.api.service;
 
+import com.gestaofacil.api.domain.company.Company;
+import com.gestaofacil.api.domain.company.CompanyRepository;
 import com.gestaofacil.api.domain.user.User;
+import com.gestaofacil.api.domain.user.UserCreationDTO;
 import com.gestaofacil.api.domain.user.UserDTO;
 import com.gestaofacil.api.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +12,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
     private PasswordEncoder bcrypt;
     @Autowired
     private UserRepository userRepository;
-    public UserDTO createUser(UserDTO user){
-        var newUser = new User(user);
+    @Autowired
+    private CompanyRepository companyRepository;
+    public UserDTO createUser(UserCreationDTO user){
+        if(!companyRepository.existsById(user.company_id())) throw new RuntimeException("empresa não encontrada");
+        var company = companyRepository.findById(user.company_id()).get();
+        var newUser = new User(user, company);
         newUser.setPassword(bcrypt.encode(user.password()));
+        System.out.println(newUser);
         userRepository.save(newUser);
         return new UserDTO(newUser);
     }

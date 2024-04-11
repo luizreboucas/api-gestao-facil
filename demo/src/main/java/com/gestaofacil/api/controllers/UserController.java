@@ -1,6 +1,7 @@
 package com.gestaofacil.api.controllers;
 
 import com.gestaofacil.api.domain.user.User;
+import com.gestaofacil.api.domain.user.UserCreationDTO;
 import com.gestaofacil.api.domain.user.UserDTO;
 import com.gestaofacil.api.domain.user.UserRepository;
 import com.gestaofacil.api.service.UserService;
@@ -34,10 +35,10 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO user){
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserCreationDTO user){
         try{
             var newUser = userService.createUser(user);
-            return ResponseEntity.created(URI.create("/user" + newUser.user_id())).body(user);
+            return ResponseEntity.created(URI.create("/user" + newUser.user_id())).body(newUser);
         }catch(RuntimeException exception) {
             throw new RuntimeException("erro ao criar usuário: ", exception);
         }

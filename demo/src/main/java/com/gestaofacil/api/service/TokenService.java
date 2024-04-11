@@ -22,7 +22,7 @@ public class TokenService {
                     .withIssuer("gestao_facil")
                     .withSubject(user.getEmail())
                     .withClaim("id", user.getUser_id())
-                    .withClaim("company", user.getCompany_id())
+                    .withClaim("company", user.getCompany().getName())
                     .withClaim("name", user.getName())
                     .withExpiresAt(getExpirationTime())
                     .sign(algorithm);
