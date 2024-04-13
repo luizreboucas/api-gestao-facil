@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/company")
+@RequestMapping("/companys")
 public class CompanyController {
     @Autowired
     CompanyService companyService;

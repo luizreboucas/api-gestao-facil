@@ -6,5 +6,8 @@ CREATE TABLE IF NOT EXISTS USERS (
     password VARCHAR (255),
     cpf VARCHAR(100),
     phone_number VARCHAR(100),
-    PRIMARY KEY (user_id)
+    company_id bigint not null,
+    PRIMARY KEY (user_id),
+    add constraint fk_company_user
+    foreign key(company_id) references companys(id)
 )
