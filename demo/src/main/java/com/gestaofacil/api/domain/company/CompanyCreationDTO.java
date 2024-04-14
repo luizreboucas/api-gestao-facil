@@ -6,5 +6,6 @@ public record CompanyCreationDTO(
         String cnpj,
         String state,
         String number,
-        String complement) {
+        String complement,
+        String street) {
 }

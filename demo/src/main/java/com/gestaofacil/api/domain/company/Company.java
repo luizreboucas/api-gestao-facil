@@ -22,6 +22,7 @@ public class Company {
     private String state;
     private String number;
     private String complement;
+    private String street;
 
     public Company(CompanyCreationDTO company){
         this.name = company.name();
@@ -30,6 +31,7 @@ public class Company {
         this.complement = company.complement();
         this.number = company.number();
         this.state = company.state();
+        this.street = company.street();
     }
 
     public void update(CompanyCreationDTO company) {
@@ -39,6 +41,7 @@ public class Company {
         if(company.complement() != null) this.complement = company.complement();
         if(company.number() != null) this.number = company.number();
         if(company.state() != null) this.state = company.state();
+        if(company.street() != null) this.street = company.street();
     }
 }
 

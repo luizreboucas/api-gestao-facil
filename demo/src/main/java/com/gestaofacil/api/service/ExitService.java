@@ -34,6 +34,21 @@ public class ExitService {
         return new ExitDTO(newExit);
     }
 
+    public ExitDTO updateExit(ExitCreationDTO newExitData, Long exitId){
+        if(!exitRepository.existsById(exitId)) throw new RuntimeException("saída não encontrada");
+        var exit = exitRepository.findById(exitId).get();
+        exit.update(newExitData);
+        return new ExitDTO(exit);
+    }
+
+    public void deleteExit(Long exitId){
+        try{
+            exitRepository.deleteById(exitId);
+        }catch(RuntimeException exception){
+            throw new RuntimeException(exception);
+        }
+    }
+
     private LocalDateTime getExitDate(ExitCreationDTO exit){
         if(exit.exit_date() == null) {
             return LocalDateTime.now();

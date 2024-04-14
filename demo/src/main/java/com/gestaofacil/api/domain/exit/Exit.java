@@ -29,4 +29,11 @@ public class Exit {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    public void update(ExitCreationDTO exit){
+        if(exit.exit_date() != null) this.exit_date = exit.exit_date();
+        if(exit.description() != null) this.description = exit.description();
+        if(exit.value() != null) this.value = exit.value();
+        if(exit.type() != null) this.type = exit.type();
+    }
+
 }

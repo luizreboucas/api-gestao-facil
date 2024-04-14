@@ -30,4 +30,19 @@ public class ExitController {
         var uri = uriBuilder.path("/exits/{id}").buildAndExpand(newExit.id()).toUri();
         return ResponseEntity.created(uri).body(newExit);
     }
+
+    @PutMapping("/{exitId}")
+    @Transactional
+    public ResponseEntity<ExitDTO> updateExit(@PathVariable Long exitId, @RequestBody ExitCreationDTO newExitData){
+        var exit = exitService.updateExit(newExitData, exitId);
+        return ResponseEntity.ok(exit);
+    }
+
+    @DeleteMapping("/{exitId}")
+    @Transactional
+    public ResponseEntity<String> deleteExit(@PathVariable Long exitId){
+        exitService.deleteExit(exitId);
+        return ResponseEntity.ok("saída deletada com sucesso");
+    }
+
 }
