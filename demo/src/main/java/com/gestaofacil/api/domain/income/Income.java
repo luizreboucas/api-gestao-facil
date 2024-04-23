@@ -1,6 +1,7 @@
 package com.gestaofacil.api.domain.income;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gestaofacil.api.domain.client.Client;
 import com.gestaofacil.api.domain.company.Company;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +27,9 @@ public class Income {
     @JoinColumn(name = "company_id")
     private Company company;
     private LocalDateTime income_date;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    private Client client;
 
     public Income(IncomeDTO income, Company company){
         this.company = company;
