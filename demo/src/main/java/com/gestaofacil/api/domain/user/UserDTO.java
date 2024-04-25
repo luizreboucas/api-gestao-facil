@@ -9,14 +9,14 @@ import jakarta.validation.constraints.NotNull;
 public record UserDTO(
         Long user_id,
         RoleEnum role,
-        @NotNull
+
         String name,
-        @NotNull
+
         String email,
         Company company,
-        @NotNull
+
         String password,
-        @NotNull
+
         String cpf,
         String phone_number) {
     public UserDTO(User user){
