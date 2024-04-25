@@ -27,7 +27,6 @@ public class UserService {
         var company = companyRepository.findById(user.company_id()).get();
         var newUser = new User(user, company);
         newUser.setPassword(bcrypt.encode(user.password()));
-        System.out.println(newUser);
         userRepository.save(newUser);
         return new UserDTO(newUser);
     }
