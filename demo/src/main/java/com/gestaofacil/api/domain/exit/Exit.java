@@ -2,6 +2,7 @@ package com.gestaofacil.api.domain.exit;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gestaofacil.api.domain.company.Company;
+import com.gestaofacil.api.domain.suplier.Suplier;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +29,9 @@ public class Exit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "suplier_id")
+    private Suplier suplier;
 
     public void update(ExitCreationDTO exit){
         if(exit.exit_date() != null) this.exit_date = exit.exit_date();

@@ -6,6 +6,7 @@ import com.gestaofacil.api.domain.company.Company;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Income {
+public class Income implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

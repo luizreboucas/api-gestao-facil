@@ -7,9 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record ExitDTO(Long id,String description, @NotNull BigDecimal value, @NotNull ExitTypeEnum type, @NotNull LocalDateTime exit_date, @NotNull Long company_id) {
+public record ExitDTO(Long id,String description, @NotNull BigDecimal value, @NotNull ExitTypeEnum type, @NotNull LocalDateTime exit_date, @NotNull Long company_id, @NotNull Long suplier_id) {
 
     public ExitDTO(Exit exit){
-        this(exit.getId(),exit.getDescription(), exit.getValue(), exit.getType(), exit.getExit_date(), exit.getCompany().getId());
+        this(exit.getId(),exit.getDescription(), exit.getValue(), exit.getType(), exit.getExit_date(), exit.getCompany().getId(), exit.getSuplier().getId());
     }
 }

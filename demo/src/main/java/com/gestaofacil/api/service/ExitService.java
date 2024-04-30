@@ -5,6 +5,7 @@ import com.gestaofacil.api.domain.exit.Exit;
 import com.gestaofacil.api.domain.exit.ExitCreationDTO;
 import com.gestaofacil.api.domain.exit.ExitDTO;
 import com.gestaofacil.api.domain.exit.ExitRepository;
+import com.gestaofacil.api.domain.suplier.SuplierRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ public class ExitService {
     ExitRepository exitRepository;
     @Autowired
     CompanyRepository companyRepository;
+    @Autowired
+    SuplierRepository suplierRepository;
 
     public Page<ExitDTO> getExitsForCompany (Pageable pagination, Long companyId){
         var exits = exitRepository.findByCompany_id(pagination, companyId);
@@ -27,9 +30,11 @@ public class ExitService {
 
     public ExitDTO createExit(ExitCreationDTO exit){
         if(!companyRepository.existsById(exit.company_id())) throw new RuntimeException("empresa não encontrada");
+        if(!companyRepository.existsById(exit.suplier_id())) throw new RuntimeException("fornecedor não encontrado");
         var company = companyRepository.findById(exit.company_id()).get();
         var exitDate = getExitDate(exit);
-        var newExit = new Exit(null, exit.description(), exit.value(),exit.type(), exitDate,company);
+        var suplier = suplierRepository.findById(exit.suplier_id()).get();
+        var newExit = new Exit(null,exit.description(),exit.value(),exit.type(),exitDate,company,suplier);
         exitRepository.save(newExit);
         return new ExitDTO(newExit);
     }
