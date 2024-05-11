@@ -1,5 +1,6 @@
 package com.gestaofacil.api.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gestaofacil.api.controllers.UserController;
 import com.gestaofacil.api.domain.company.Company;
@@ -43,7 +44,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     @MockBean
     UserService userService;
@@ -63,10 +63,56 @@ class UserServiceTest {
         this.mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper()
-                        .writeValueAsString(new ObjectMapper().writeValueAsString(userData))))
+                        .writeValueAsString(userData)))
                 .andExpect(status().isCreated());
 
     }
+    @Test
+    @DisplayName("admin user should not create a account with missing attributes")
+    public void UC1cenario2() throws Exception {
+        var companyData = new CompanyCreationDTO("company","1324345","12342342","CE","423","perto","rua adidas");
+        Company company = new Company(companyData);
+        company.setId(1L);
+        var userData = new UserCreationDTO( RoleEnum.Admin,"","luiz@email",company.getId(),"123","3123432","8532323");
+        User user = new User(userData, company);
+        when(userService.createUser(userData)).thenReturn(new UserDTO(user));
+        this.mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userData))
+                ).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("normal user should create a normal user account")
+    public void UC1cenario6() throws Exception {
+        var companyData = new CompanyCreationDTO("company","1324345","12342342","CE","423","perto","rua adidas");
+        Company company = new Company(companyData);
+        company.setId(1L);
+        var userData = new UserCreationDTO( RoleEnum.User,"user@novo","luiz@email",company.getId(),"123","3123432","8532323");
+        User user = new User(userData, company);
+        when(userService.createUser(userData)).thenReturn(new UserDTO(user));
+        this.mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userData)))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("normal user should not create a normal user account without all attributes")
+    public void UC1cenario7() throws Exception {
+        var companyData = new CompanyCreationDTO("company","1324345","12342342","CE","423","perto","rua adidas");
+        Company company = new Company(companyData);
+        company.setId(1L);
+        var userData = new UserCreationDTO( RoleEnum.User,"","luiz@email",company.getId(),"123","3123432","8532323");
+        User user = new User(userData, company);
+        when(userService.createUser(userData)).thenReturn(new UserDTO(user));
+        this.mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(userData)))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+
 
     private User createUser(UserCreationDTO userData, Company company){
         var user = new User(userData, company);

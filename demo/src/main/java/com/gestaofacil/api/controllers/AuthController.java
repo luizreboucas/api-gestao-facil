@@ -25,7 +25,6 @@ public class AuthController {
         var authenticationToken = new UsernamePasswordAuthenticationToken(loginData.email(), loginData.password());
         System.out.println(authenticationToken);
         var isAuthenticated = manager.authenticate(authenticationToken);
-        System.out.println("e aqui");
         var token = tokenService.generateToken((User) isAuthenticated.getPrincipal());
         return ResponseEntity.ok(token);
     }
